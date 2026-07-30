@@ -1,0 +1,751 @@
+[
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1100",
+    "level2": "Strategy Development",
+    "rf_code": "RF1101",
+    "name": "กำหนดกลยุทธ์ไม่สอดคล้องและเหมาะสมกับเป้าหมายองค์กร"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1100",
+    "level2": "Strategy Development",
+    "rf_code": "RF1102",
+    "name": "การประมาณการทางการเงินไม่สอดคลอดและเหมาะสมกับแผนทางดำเนินงาน"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1100",
+    "level2": "Strategy Development",
+    "rf_code": "RF1103",
+    "name": "ขาดการสื่อสารเรื่องกลยุทธ์องค์กร/มีการสื่อสารที่ไม่ชัดเจน เกิดความล่าช้า รวมถึงมีการสื่อสารที่ไม่ตรงประเด็นหรือตรงกลุ่มเป้าหมาย"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1200",
+    "level2": "Product and Innovation",
+    "rf_code": "RF1201",
+    "name": "ขาดความสามารถในการพัฒนาด้านเทคโนโลยี และนวัตกรรม เพื่อสนับสนุนการพัฒนาระบบและให้บริการต่อกลุ่มธนาคาร"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1300",
+    "level2": "Environmental, social and governance (ESG)",
+    "rf_code": "RF1301",
+    "name": "ขาดการบริหารด้านสิ่งแวดล้อม สังคม และบรรษัทภิบาล (ESG)  และการประเมินผลกระทบด้าน ESG อย่างต่อเนื่อง เพื่อควบคุมและกำหนดให้อยู่ในระดับมาตรฐาน"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1400",
+    "level2": "Resource and management",
+    "rf_code": "RF1401",
+    "name": "การบริหารจัดการทรัพยากรระดับผู้บริหารที่ไม่มีประสิทธิภาพหรือไม่เหมาะสม หรือไม่เพียงพอต่อธุรกิจ"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1400",
+    "level2": "Resource and management",
+    "rf_code": "RF1402",
+    "name": "การจัดสรรทรัพยากรบุคคลไม่มีประสิทธิภาพ จำนวนบุคลากรไม่สอดคล้องหรือไม่เหมาะสมกับบทบาทหน้าที่ที่ได้รับมอบหมาย"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1400",
+    "level2": "Resource and management",
+    "rf_code": "RF1403",
+    "name": "ความสามารถและศักยภาพของพนักงานไม่สอดคล้องและเหมาะสมกับบทบาทหน้าที่ที่ได้รับมอบหมาย"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1400",
+    "level2": "Resource and management",
+    "rf_code": "RF1404",
+    "name": "การขาดจริยธรรม ศีลธรรม รวมถึงการจัดการความขัดแย้งทางผลประโยชน์ (Conflict of Interest) และการเอื้อประโยชน์ หรือส่งเสริมการกระทำผิด ของพนักงานที่มีความสัมพันธ์กัน"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1500",
+    "level2": "Business Partnership",
+    "rf_code": "RF1501",
+    "name": "หุ้นส่วนทางธุรกิจไม่เหมาะสมกับกลยุทธ์และแผนทางธุรกิจขององค์กร ทำให้การดำเนินงานขาดประสิทธิภาพ"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1500",
+    "level2": "Business Partnership",
+    "rf_code": "RF1502",
+    "name": "หุ้นส่วนทางธุรกิจมีการดำเนินธุรกิจเดียวกับบริษัท และผันตัวเป็นคู่แข่ง"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1600",
+    "level2": "Economic & Industry",
+    "rf_code": "RF1601",
+    "name": "การชะลอตัวของเศรษฐกิจและวิกฤตเศรษฐกิจในภาพรวม ซึ่งมีผลกระทบต่อกลยุทธ์และผลการดำเนินงานขององค์กรที่ได้กำหนดไว้"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1600",
+    "level2": "Economic & Industry",
+    "rf_code": "RF1602",
+    "name": "แนวโน้มอุตสาหกรรม เกี่ยวกับการให้บริการ digital  infrastructure สำหรับกลุ่มธนาคาร ถูกทดแทนจาก Platform อื่นๆ ซึ่งอาจส่งผลให้แนวโน้มการเติบโตของอุตสาหกรรมชะลอตัวหรือลดลง"
+  },
+  {
+    "level1": "Strategic Risk",
+    "level2_code": "RF1600",
+    "level2": "Economic & Industry",
+    "rf_code": "RF1603",
+    "name": "ภาวะการแข่งขันในธุรกิจเพิ่มสูงขึ้น เช่น จากบริษัทเทคโนโลยีใหม่ที่เกิดขึ้น หรือ การเข้ามาของบริษัทจากต่างประเทศ"
+  },
+  {
+    "level1": "Legal and Compliance Risk",
+    "level2_code": "RF2100",
+    "level2": "Law & Regulation",
+    "rf_code": "RF2101",
+    "name": "ความซับซ้อนและการเปลี่ยนแปลงของกฎระเบียบที่เกี่ยวข้องกับการดำเนินงานขององค์กรที่จะต้องปฏิบัติตาม หรือกฎระเบียบที่เกี่ยวข้องกับกลุ่มธนาคารและการให้บริการแก่ธนาคาร รวมทั้ง กฎระเบียบที่อาจเกี่ยวข้องกับการส่งเสริมหรือป้องกันเสถียรภาพของสถาบันการเงิน หรือ Systematic Risks ทั้งจากธนาคารภายในประเทศและต่างประเทศ"
+  },
+  {
+    "level1": "Legal and Compliance Risk",
+    "level2_code": "RF2200",
+    "level2": "Regulatory & Policy Execution",
+    "rf_code": "RF2201",
+    "name": "ขาดการกำกับดูแลกิจการและวัฒนธรรมที่ดีในการสนับสนุนการปฏิบัติตามกฎเกณฑ์ ไม่มีความโปร่งใส ขาดการถ่วงดุลอำนาจ"
+  },
+  {
+    "level1": "Legal and Compliance Risk",
+    "level2_code": "RF2200",
+    "level2": "Policy Execution",
+    "rf_code": "RF2202",
+    "name": "นโยบายและมาตรฐานการดำเนินงานไม่เป็นไปตามกฎหมาย กฎระเบียบ หรือข้อกำหนดจากหน่วยงานกำกับดูแล"
+  },
+  {
+    "level1": "Legal and Compliance Risk",
+    "level2_code": "RF2200",
+    "level2": "Regulatory &",
+    "rf_code": "RF2203",
+    "name": "ขาดกระบวนการกำกับดูแลการปฏิบัติตามกฎระเบียบ หรือขาดกระบวนการสื่อสารและการสร้างความตระหนักรู้ให้เกิดขึ้นในองค์กร"
+  },
+  {
+    "level1": "Legal and Compliance Risk",
+    "level2_code": "RF2300",
+    "level2": "Contract",
+    "rf_code": "RF2301",
+    "name": "สัญญาที่ไม่เหมาะสม มีความไม่เป็นธรรม ก่อให้เกิดความเสี่ยงและทำให้องค์กรเสียเปรียบ หรือไม่ครอบคลุมรัดกุมเพียงพอ"
+  },
+  {
+    "level1": "Legal and Compliance Risk",
+    "level2_code": "RF2400",
+    "level2": "Litigation and Dispute Resolution",
+    "rf_code": "RF2401",
+    "name": "การถูกฟ้องร้อง ข้อพิพาททางกฎหมาย หรือการเสียหายจากการดำเนินคดี"
+  },
+  {
+    "level1": "Accounting and Financial Risk",
+    "level2_code": "RF3100",
+    "level2": "Tax and Accounting",
+    "rf_code": "RF3101",
+    "name": "การบริหารจัดการทางบัญชีหรือภาษีที่ขาดประสิทธิภาพ ทำให้เกิดผลกระทบทางการเงินของบริษัท เช่น ความเสียหาย หรือการสูญเสียประโยชน์ทางการเงิน"
+  },
+  {
+    "level1": "Accounting and Financial Risk",
+    "level2_code": "RF3200",
+    "level2": "Financial Risk",
+    "rf_code": "RF3201",
+    "name": "การใช้จ่ายงบประมาณขาดประสิทธิภาพ"
+  },
+  {
+    "level1": "Accounting and Financial Risk",
+    "level2_code": "RF3200",
+    "level2": "Financial Risk",
+    "rf_code": "RF3202",
+    "name": "ความเสี่ยงที่เกี่ยวข้องกับสัดส่วนต้นทุนของบริษัทที่ปรับตัวเพิ่มขึ้น จากทั้งจำนวนรายจ่ายที่เพิ่มขึ้น หรือสัดส่วนรายได้ที่ลดลง หรือวิธีการคำนวณต้นทุนของแต่ละบริการที่ไม่เหมาะสม ทำให้การคำนวณและวิเคราะห์ทางการเงินไม่สะท้อนความเป็นจริง ส่งผลให้เกิดการตัดสินใจที่ไม่เหมาะสมและเกิดความเสียหายทางการเงินแก่บริษัท"
+  },
+  {
+    "level1": "Accounting and Financial Risk",
+    "level2_code": "RF3200",
+    "level2": "Financial Risk",
+    "rf_code": "RF3203",
+    "name": "ความเสี่ยงด้านสภาพคล่องจากการบริหารกระแสเงินสด"
+  },
+  {
+    "level1": "Accounting and Financial Risk",
+    "level2_code": "RF3200",
+    "level2": "Financial Risk",
+    "rf_code": "RF3204",
+    "name": "ความเสี่ยงจากการลงทุน  ส่งผลให้เกิดความเสียหายทางการเงินต่อองค์กร"
+  },
+  {
+    "level1": "Accounting and Financial Risk",
+    "level2_code": "RF3200",
+    "level2": "Financial Risk",
+    "rf_code": "RF3205",
+    "name": "การจัดซื้อจัดจ้างไม่เป็นไปตามวัตถุประสงค์การจัดซื้อจัดจ้างของบริษัท"
+  },
+  {
+    "level1": "Accounting and Financial Risk",
+    "level2_code": "RF3300",
+    "level2": "Financial Reporting and Disclosure",
+    "rf_code": "RF3301",
+    "name": "การจัดทำรายงานทางการเงินล่าช้า หรือรายงานการเงินไม่ถูกต้อง ไม่เป็นไปตามมาตรฐานการบัญชี"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4100",
+    "level2": "Process",
+    "rf_code": "RF4101",
+    "name": "การวางแผนการดำเนินงานและการให้บริการไม่เหมาะสม"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4100",
+    "level2": "Process",
+    "rf_code": "RF4102",
+    "name": "กระบวนการทำงานไม่มีประสิทธิภาพหรือไม่ได้คุณภาพที่กำหนด"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4100",
+    "level2": "Process",
+    "rf_code": "RF4103",
+    "name": "กระบวนการทำงาน การให้บริการหยุดชะงัก"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4100",
+    "level2": "Process",
+    "rf_code": "RF4104",
+    "name": "พนักงานปฏิบัติงานผิดพลาด ไม่ปฏิบัติงานตามขั้นตอนมาตรฐาน"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4100",
+    "level2": "Process",
+    "rf_code": "RF4105",
+    "name": "เหตุการณ์ฉุกเฉินหรือภัยธรรมชาติ ส่งผลกระทบต่อการปฏิบัติงาน"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4200",
+    "level2": "Employment and Safety",
+    "rf_code": "RF4201",
+    "name": "อุบัติเหตุและมาตรฐานการรักษาความปลอดภัยในสถานที่ทำงาน"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4200",
+    "level2": "Employment and Safety",
+    "rf_code": "RF4202",
+    "name": "ความเสี่ยงในการจ้างงานต่อพนักงานไม่เป็นธรรม หรือไม่เหมาะสม"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4300",
+    "level2": "Third Party Risk",
+    "rf_code": "RF4301",
+    "name": "การพึ่งพาผู้ให้บริการภายนอก หรือรายใดรายหนึ่งเป็นหลัก"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4300",
+    "level2": "Third Party Risk",
+    "rf_code": "RF4302",
+    "name": "การปฏิบัติงานของผู้ให้บริการภายนอกไม่เป็นตามความมุ่งหวังขององค์กร"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4300",
+    "level2": "Third Party Risk",
+    "rf_code": "RF4303",
+    "name": "การละเมิดสัญญาของผู้ให้บริการภายนอก"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4400",
+    "level2": "Fraud",
+    "rf_code": "RF4401",
+    "name": "การทุจริตจากบุคลากรภายในองค์กร"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4400",
+    "level2": "Fraud",
+    "rf_code": "RF4402",
+    "name": "การทุจริตภายนอกองค์กรหรือคู่ค้า"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4500",
+    "level2": "Physical Asset",
+    "rf_code": "RF4501",
+    "name": "ทรัพย์สินสูญหาย"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4500",
+    "level2": "Physical Asset",
+    "rf_code": "RF4502",
+    "name": "ทรัพย์สินเสียหาย"
+  },
+  {
+    "level1": "Operational Risk",
+    "level2_code": "RF4600",
+    "level2": "Project Risk",
+    "rf_code": "RF4601",
+    "name": "งานโครงการไม่เป็นไปตามเป้าหมายที่กำหนดหรือขาดประสิทธิภาพ เช่น ระยะเวลา ผลลัพธ์ เป็นต้น"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5100",
+    "level2": "IT Asset (หมายถึง อุปกรณ์ หรือ เครื่องมือทางกายภาพ และซอฟต์แวร์ที่ติดตั้งเพื่อใช้ในการปฏิบัติงานขององค์กร)",
+    "rf_code": "RF5101",
+    "name": "มีการจัดทำทะเบียนรายชื่ออุปกรณ์ไม่ถูกต้องครบถ้วน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5100",
+    "level2": "IT Asset (หมายถึง อุปกรณ์ หรือ เครื่องมือทางกายภาพ และซอฟต์แวร์ที่ติดตั้งเพื่อใช้ในการปฏิบัติงานขององค์กร)",
+    "rf_code": "RF5102",
+    "name": "ทรัพย์สินทางด้านเทคโนโลยีสารสนเทศหมดอายุงาน/หมดอายุบริการ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5100",
+    "level2": "IT Asset (หมายถึง อุปกรณ์ หรือ เครื่องมือทางกายภาพ และซอฟต์แวร์ที่ติดตั้งเพื่อใช้ในการปฏิบัติงานขององค์กร)",
+    "rf_code": "RF5103",
+    "name": "ทรัพย์สินทางด้านเทคโนโลยีสารสนเทศล้าสมัยและไม่มีการซ่อมบำรุง"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5100",
+    "level2": "IT Asset (หมายถึง อุปกรณ์ หรือ เครื่องมือทางกายภาพ และซอฟต์แวร์ที่ติดตั้งเพื่อใช้ในการปฏิบัติงานขององค์กร)",
+    "rf_code": "RF5104",
+    "name": "ทรัพย์สินทางด้านเทคโนโลยีสารสนเทศสูญหาย จากการถูกขโมย หรือ ไม่ได้รับการป้องกันเพียงพอ หรือ ความประมาทเลินเล่อของผู้เก็บรักษา"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5100",
+    "level2": "IT Asset (หมายถึง อุปกรณ์ หรือ เครื่องมือทางกายภาพ และซอฟต์แวร์ที่ติดตั้งเพื่อใช้ในการปฏิบัติงานขององค์กร)",
+    "rf_code": "RF5105",
+    "name": "การตัดจำหน่าย และการทำลายทรัพย์สินทางด้านเทคโนโลยีสารสนเทศไม่ได้รับการอนุมัติและดำเนินการอย่างเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5201",
+    "name": "การรักษาความมั่นคงปลอดภัยของระบบไม่ได้รับการติดตั้งให้เป็นไปตามมาตรฐาน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5202",
+    "name": "ระบบถูกโจมตีจากโปรแกรมไม่ประสงค์ดีและการเจาะระบบ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5203",
+    "name": "ระบบงานไม่ได้รับการอัพเดท Patch ให้เป็นปัจจุบัน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5204",
+    "name": "มีการเข้าถึงระบบด้วยผู้ใช้งานที่มีสิทธิสูงโดยไม่ได้รับอนุญาต"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5205",
+    "name": "ระบบงานไม่ได้รับการบริหารจัดการช่องโหว่และทดสอบระบบอย่างเหมาะสมเป็นประจำสม่ำเสมอ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5206",
+    "name": "การตอบสนองต่อเหตุการณ์ผิดปกติทาง Cyber ไม่ได้รับการจัดทำแนวทางอย่างเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5207",
+    "name": "แผนการรองรับเหตุการณ์ฉุกเฉินทาง Cyber ไม่ได้รับการจัดทำอย่างเหมาะสมและทดสอบอย่างเป็นประจำสม่ำเสมอ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5200",
+    "level2": "Cyber Security Risk",
+    "rf_code": "RF5208",
+    "name": "ระบบมีการติดตั้งการพิสูจน์ตัวตนที่ไม่เข้มแข็งเพียงพอ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5301",
+    "name": "การกำหนดโครงสร้างและแต่งตั้งเจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคลไม่ได้รับการดำเนินการอย่างเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5302",
+    "name": "ข้อมูลระบบสารสนเทศไม่ถูกต้องครบถ้วน หรือไม่เป็นปัจจุบัน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5303",
+    "name": "การจัดเก็บข้อมูลและทำลายข้อมูลไม่ถูกต้อง และไม่สอดคล้องกับแนวปฏิบัติตามที่กฎหมายกำหนดไว้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5304",
+    "name": "การประมวลผลข้อมูลและการนำข้อมูลไปใช้ไม่เป็นไปตามแนวทางปฏิบัติตามที่กฎหมายหรือองค์กรกำหนดไว้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5305",
+    "name": "มีการฟ้องร้องจากบุคคลที่ถูกเปิดเผยข้อมูลส่วนบุคคลโดยไม่ได้รับอนุญาต"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5306",
+    "name": "ปัญหาหรือข้อร้องเรียนต่างๆ ไม่ได้รับการจัดการอย่างเหมาะสม ทันเวลา"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5307",
+    "name": "ชั้นความลับที่ได้รับการจัดเก็บข้อมูลในระบบเทคโนโลยีสารสนเทศไม่ได้รับการปรับปรุงให้เป็นปัจจุบัน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5308",
+    "name": "มีการจัดเก็บข้อมูลตามชั้นความลับที่ไม่ถูกต้อง"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5309",
+    "name": "การวบรวมข้อมูลข้อมูลจากแหล่งข้อมูลต่างๆ หรือการแลกเปลี่ยนข้อมูลระหว่างหน่วยงาน ไม่ถูกต้องครบถ้วน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5310",
+    "name": "ข้อมูลส่วนบุคคลลรั่วไหล หรือถูกเปิดเผยสู่สาธารณะ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5300",
+    "level2": "Data Risk",
+    "rf_code": "RF5311",
+    "name": "ผู้ไม่มีสิทธิ์หรือไม่ได้รับอนุญาตสามารถเข้าถึงข้อมูลได้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5401",
+    "name": "การประมวลผลข้อมูลผิดพลาดหรือไม่ถูกต้อง"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5402",
+    "name": "ไม่มีการสำรองข้อมูล กู้คืนระบบ และแผนรับมือเหตุฉุกเฉินที่เหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5403",
+    "name": "สิทธิ์การเข้าถึงระบบไม่สอดคล้องตามอำนาจหน้าที่ความรับผิดชอบและหรือ ไม่เป็นปัจจุบัน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5404",
+    "name": "ผู้ไม่มีสิทธิ์หรือไม่ได้รับอนุญาตสามารถเข้าห้อง Data Center ได้ดังนี้\n- พื้นที่รอบนอกศูนย์คอมพิวเตอร์ ตัวอาคารและภายในศูนย์คอมพิวเตอร์\n*ต้องประเมินทุกครั้ง แยกราย Data Center(สนช1/2564)"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5405",
+    "name": "Data Center Facility ไม่พร้อมใช้งาน เช่น เครื่องปรับอากาศ ระบบดับเพลิง CCTV ไม่สามารถใช้งานได้ หรือ ไม่มีผู้ควบคุมดูแลระบบต่างๆ ดังนี้\n- ความพร้อมใช้ของระบบสาธารณูปโภค\n- ประสิทธิภาพระบบป้องกันภัยต่างๆ\n- ความเพียงพอของการปฏิบัติงานภายในศูนย์คอมพิวเตอร์ \n*ต้องประเมินทุกครั้ง แยกราย Data Center(สนช1/2564)"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5406",
+    "name": "ไม่สามารถแก้ไขปัญหาทางด้านเทคโนโลยีสารสนเทศได้ทันตามเวลาที่กำหนดไว้ในข้อตกลงการให้บริการ (SLA)"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5407",
+    "name": "ระบบงานที่มีการเปลี่ยนแปลง ทำงานไม่ถูกต้อง และไม่มีการควบคุม ตรวจสอบ ทดสอบให้มั่นใจก่อนการดำเนินการ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5408",
+    "name": "กระบวนการบริหารจัดการปัญหา หรือ ข้อผิดพลาดบนระบบเทคโนโลยีสารสนเทศ (IT incident) ไม่ได้รับการกำหนดไว้อย่างชัดเจน ครบถ้วนและเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5400",
+    "level2": "IT Operation",
+    "rf_code": "RF5409",
+    "name": "การบริหารจัดการปัญหาหรือข้อผิดพลาดบนระบบเทคโนโลยีสารสนเทศ (IT Incident) ไม่ได้รับการปฏิบัติตามแนวทางที่กำหนดไว้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5501",
+    "name": "เกณฑ์การคัดเลือกบุคคลภายนอกทางเทคโนโลยีสารสนเทศไม่ได้รับการออกแบบและถูกนำไปใช้อย่างเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5502",
+    "name": "ข้อตกลงระดับการให้บริการไม่ได้ระบุอย่างเหมาะสม ทำให้เกิดปัญหาระบบไม่สามารถให้บริการได้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5503",
+    "name": "สิทธิ์เข้าถึงระบบข้อมูลเกินขอบเขตหน้าที่การให้บริการ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5504",
+    "name": "การปฏิบัติงานหยุดชะงักหรือถูกยกเลิกสัญญาจากผู้ให้บริการภายนอก"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5505",
+    "name": "การจัดทำสัญญากับผู้ให้บริการภายนอกไม่เป็นธรรม ส่งผลต่อการดำเนินงานที่อาจจะหยุดชะงัก หรือ มีการฟ้องร้อง"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5506",
+    "name": "ไม่มีการบริหารจัดการเหตุการณ์ผิดปกติด้านเทคโนโลยีสารสนเทศที่เกิดขึ้นจากผู้ให้บริการภายนอกอย่างเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5507",
+    "name": "ไม่ได้จัดทำผลการประเมินบุคคลภายนอกทางเทคโนโลยีสารสนเทศเพื่อใช้ในการบริหารสัญญา"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5508",
+    "name": "ผู้ให้บริการภายนอกไม่สามารถให้บริการอย่างต่อเนื่อง เนื่องจากปัญหาทางด้านการดำเนินงาน (Going Concern)"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5509",
+    "name": "ผู้ให้บริการภายนอกทางด้านเทคโนโลยีสารสนเทศ ไม่ได้จัดทำแผนการตอบสนองต่อเหตุการณ์ผิดปกติด้านเทคโนโลยีสารสนเทศอย่างเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5510",
+    "name": "การเชื่อมต่อระบบของผู้ให้บริการภายนอกทั้งหมด หรือ บางส่วนไม่สอดคล้องกัน เข้ากันไม่ได้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5500",
+    "level2": "IT Third Party Risk",
+    "rf_code": "RF5511",
+    "name": "ผู้ให้บริการภายนอกทางเทคโนโลยีสารสนเทศขาดคุณสมบัติและประสิทธิภาพที่เพียงพอ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5601",
+    "name": "การเก็บรวบรวมความต้องการของผู้ใช้งานก่อนจะนำเทคโนโลยีสารสนเทศใหม่มาใช้งานไม่ครบถ้วน เพียงพอ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5602",
+    "name": "เทคโนโลยีสารสนเทศใหม่ที่นำมาใช้ไม่เป็นที่ต้องการของตลาด"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5603",
+    "name": "ไม่มีการจัดทำ POC เพื่อประเมินความเป็นไปได้ของเทคโนโลยีสารสนเทศใหม่ก่อนนำมาใช้งานจริง"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5604",
+    "name": "ไม่มีการการวางแผนโครงสร้างทางเทคโนโลยีสารสนเทศของระบบใหม่อย่างชัดเจน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5605",
+    "name": "การเก็บข้อมูล การวิจัย การวิเคราะห์เทคโนโลยีสารสนเทศใหม่ไม่ครบถ้วน ผิดพลาด หรือมีความล่าช้า"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5606",
+    "name": "เทคโนโลยีใหม่ที่พัฒนาเสร็จล่าช้า ส่งผลให้ไม่ตอบสนองต่อแผนกลยุทธ์ขององค์กร"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5607",
+    "name": "ไม่สามารถหาแนวทางการทดสอบเทคโนโลยีใหม่ก่อนการติดตั้งได้อย่างเหมาะสม เนื่องจากไม่สามารถหาสภาพแวดล้อมที่เหมาะสมหรือมีอยู่แล้วในตลาดได้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5608",
+    "name": "คำนวณผลตอบแทนการลงทุนไม่ถูกต้อง หรือ ไม่ทันเวลา"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5609",
+    "name": "มีต้นทุนการพัฒนาและติดตั้งที่สูงเกินกว่าระดับที่ยอมรับได้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5610",
+    "name": "ไม่มีแผนการดำเนินการและการควบคุมโครงการทางเทคโนโลยีใหม่อย่างชัดเจน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5600",
+    "level2": "New Technology",
+    "rf_code": "RF5611",
+    "name": "การผิดพลาดในกระบวนการพัฒนาเทคโนโลยีสารสนเทศใหม่"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5701",
+    "name": "โครงการด้านเทคโนโลยีสารสนเทศหยุดชะงัก/เกิดความล่าช้า หรือไม่เป็นไปตามแผนงานที่กำหนด"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5702",
+    "name": "โครงการด้านเทคโนโลยีสารสนเทศไม่สนับสนุนความต้องการของหน่วยงาน"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5703",
+    "name": "ข้อมูลโครงการสูญหาย และไม่สามารถติดตาม/ตรวจสอบข้อมูลโครงการย้อนหลังเมื่อมีปัญหาเกิดขึ้นได้"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5704",
+    "name": "ไม่มีการจัดทำแผนนำระบบขึ้นใช้ และแผนรองรับการนำระบบออกใช้ไม่สำเร็จ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5705",
+    "name": "การพัฒนาระบบไม่ได้รับการควบคุมคุณภาพอย่างเหมาะสม"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5706",
+    "name": "ผลการคำนวณความคุ้มค่าของการใช้ระบบงานไม่เป็นไปตามค่าที่กำหนดไว้ก่อนการพัฒนาระบบ"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5707",
+    "name": "ผู้ใช้งานปฏิเสธการใช้งานระบบ หรือ มีการประเมินความพึงพอใจในระบบใหม่ต่ำโดยที่มีการใช้ระบบในช่วงเวลาที่นานพอสมควร"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5708",
+    "name": "การทดสอบระบบไม่ได้รับการดำเนินการอย่างครบถ้วน เช่น ไม่มีการออกแบบการจัดทำ stress test ในกรณีที่เป็นขั้นตอนการทำงานที่มีข้อมูลปริมาณมาก"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5709",
+    "name": "ปัญหาและอุปสรรคที่เกิดขึ้นในโครงการด้านเทคโนโลยีสารสนเทศไม่ได้รับการรวบรวม วิเคราะห์ และหาสาเหตุที่แท้จริง"
+  },
+  {
+    "level1": "Information and Technology Risk",
+    "level2_code": "RF5700",
+    "level2": "IT Project",
+    "rf_code": "RF5710",
+    "name": "ผลงานส่งมอบโครงการมีคุณภาพไม่เพียงพอ ไม่สอดคล้องและตรงตามเป้าหมายของโครงการที่ได้กำหนดไว้"
+  }
+]
