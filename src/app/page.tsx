@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Papa from "papaparse";
 import * as XLSX from "xlsx";
+import { BAND_BAR, BAND_DOT, BAND_TEXT, isBlankInput, missingFields, type BandColor, type ComponentScore } from "@/lib/rag/confidence";
+import { unionColumns } from "@/lib/csv/columns";
 
 type Row = Record<string, string>;
 
@@ -22,12 +24,27 @@ interface Assessment {
   zone: string;
   managementColor: string;
   managementAction: string;
-  confidence: string;
   confidenceScore: number;
+  confidence: string;
+  confidenceColor: BandColor;
+  confidenceAction: string;
+  confidenceComponents: ComponentScore[];
+  sufficiencyScore: number | null;
+  sufficiencyReason: string;
+  needsReview: boolean;
   status: string;
   topSimilarity: number;
   margin: number;
+  tieCount: number;
 }
+
+/** แถวที่กรอกไม่ครบสามช่อง ระบบจะไม่ประเมินให้ — เก็บไว้ว่าขาดช่องไหน */
+interface Incomplete { incomplete: true; missing: string[] }
+
+type RowResult = Assessment | Incomplete | null;
+
+const isAssessed = (r: RowResult): r is Assessment => !!r && !("incomplete" in r);
+const isIncomplete = (r: RowResult): r is Incomplete => !!r && "incomplete" in r;
 
 const ZONE_DOT: Record<string, string> = {
   "สูงมาก": "bg-red-500", "สูง": "bg-orange-500", "ปานกลาง": "bg-amber-400",
@@ -37,10 +54,6 @@ const ZONE_FILL: Record<string, string> = {
   "สูงมาก": "bg-red-500 text-white", "สูง": "bg-orange-400 text-white",
   "ปานกลาง": "bg-amber-300 text-amber-950", "ต่ำ": "bg-emerald-300 text-emerald-950",
   "ต่ำมาก": "bg-emerald-200 text-emerald-950",
-};
-const CONF_DOT: Record<string, string> = {
-  "แน่นอน": "bg-emerald-500", "ค่อนข้างแน่ใจ": "bg-sky-500",
-  "ไม่แน่ใจ": "bg-amber-400", "คลุมเครือ": "bg-rose-500",
 };
 const ZONE_GRID: Record<number, string[]> = {
   5: ["สูงมาก", "สูงมาก", "สูงมาก", "สูงมาก", "สูงมาก"],
@@ -93,7 +106,7 @@ function detectCol(headers: string[], cands: string[]): string {
 
 export default function Home() {
   const [rows, setRows] = useState<Row[]>([]);
-  const [results, setResults] = useState<(Assessment | null)[]>([]);
+  const [results, setResults] = useState<RowResult[]>([]);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(0);
   const [fileName, setFileName] = useState("");
@@ -101,16 +114,23 @@ export default function Home() {
   const [headers, setHeaders] = useState<string[]>([]);
   const [cols, setCols] = useState({ scenario: "", rootCause: "", impact: "" });
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "review" | "high">("all");
+  const [filter, setFilter] = useState<"all" | "review" | "high" | "incomplete">("all");
 
   const stats = useMemo(() => {
-    const d = results.filter(Boolean) as Assessment[];
-    const review = d.filter((a) => a.status.includes("ต้องตรวจ")).length;
+    const d = results.filter(isAssessed);
+    const incomplete = results.filter(isIncomplete).length;
+    const review = d.filter((a) => a.needsReview).length;
     const high = d.filter((a) => a.zone === "สูง" || a.zone === "สูงมาก").length;
-    const confident = d.filter((a) => a.confidence === "แน่นอน" || a.confidence === "ค่อนข้างแน่ใจ").length;
+    const avgScore = d.length ? d.reduce((s, a) => s + a.confidenceScore, 0) / d.length : 0;
+    // นับจำนวนรายการในแต่ละระดับความมั่นใจ (ระดับมาจากเกณฑ์ที่ผู้ใช้ตั้งไว้ จึงนับจากผลจริง)
+    const bands = new Map<string, { n: number; color: BandColor }>();
+    d.forEach((a) => {
+      const cur = bands.get(a.confidence) ?? { n: 0, color: a.confidenceColor };
+      bands.set(a.confidence, { n: cur.n + 1, color: a.confidenceColor });
+    });
     const grid: Record<string, number> = {};
     d.forEach((a) => { grid[`${a.impactScore}-${a.likelihood}`] = (grid[`${a.impactScore}-${a.likelihood}`] ?? 0) + 1; });
-    return { total: d.length, review, high, confident, grid };
+    return { total: d.length, incomplete, review, high, avgScore, bands: [...bands.entries()], grid };
   }, [results]);
 
   async function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -139,7 +159,7 @@ export default function Home() {
 
   async function assessAll() {
     setBusy(true); setDone(0);
-    const out: (Assessment | null)[] = new Array(rows.length).fill(null);
+    const out: RowResult[] = new Array(rows.length).fill(null);
     setResults([...out]);
     let completed = 0, next = 0;
     const CONCURRENCY = 12; // ประเมินพร้อมกันมากขึ้น = เร็วขึ้น (server retry กันชนโควตาอยู่แล้ว)
@@ -148,6 +168,13 @@ export default function Home() {
         const i = next++;
         const r = rows[i];
         const input = { scenario: r[cols.scenario] ?? "", rootCause: r[cols.rootCause] ?? "", impact: r[cols.impact] ?? "" };
+        // กรอกไม่ครบ = ไม่ส่งไปประเมิน ประหยัดโควตาและไม่ได้คะแนนที่หลอกตา
+        const missing = missingFields(input);
+        if (!isBlankInput(input) && missing.length) {
+          out[i] = { incomplete: true, missing };
+          completed++; setResults([...out]); setDone(completed);
+          continue;
+        }
         try {
           const res = await fetch("/api/assess", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(input) });
           out[i] = res.ok ? await res.json() : null;
@@ -163,17 +190,27 @@ export default function Home() {
   function buildMerged(): Row[] {
     return rows.map((r, i) => {
       const a = results[i];
+      if (isIncomplete(a)) return { ...r, Status: `⏭️ ไม่ได้ประเมิน — ขาด${a.missing.join(" ")}` };
       if (!a) return r;
+      const part = (k: string) => a.confidenceComponents.find((c) => c.key === k);
       return { ...r, "Risk Level 1": a.level1 ?? "", "Risk Level 2": a.level2 ?? "",
         "Risk Level 3": a.rfCode ? `${a.rfCode} ${a.level3Name ?? ""}` : "", Remark: a.classificationReason,
         Likelihood: String(a.likelihood), "Impact Score": String(a.impactScore), "Risk Zone": a.zone,
-        Management: a.managementAction, Confidence: a.confidence, Status: a.status };
+        Management: a.managementAction,
+        "Confidence Score": a.confidenceScore.toFixed(1), Confidence: a.confidence, Status: a.status,
+        // แยกคะแนนย่อยไว้ให้ตรวจย้อนหลังและเอาไป calibrate เกณฑ์ต่อได้
+        "Conf Similarity": (part("similarity")?.score ?? 0).toFixed(1),
+        "Conf Margin": (part("margin")?.score ?? 0).toFixed(1),
+        "Conf Completeness": (part("completeness")?.score ?? 0).toFixed(1),
+        "Top Similarity": String(a.topSimilarity), "Margin": String(a.margin) };
     });
   }
   const outName = () => fileName.replace(/\.(csv|xlsx|xls)$/i, "") + ".assessed";
 
   function downloadCsv() {
-    const blob = new Blob(["﻿" + Papa.unparse(buildMerged())], { type: "text/csv;charset=utf-8" });
+    const merged = buildMerged();
+    // ระบุคอลัมน์เอง — ไม่งั้น Papa จะยึดจากแถวแรก แล้วคอลัมน์ผลประเมินหายถ้าแถวแรกไม่ได้ถูกประเมิน
+    const blob = new Blob(["﻿" + Papa.unparse(merged, { columns: unionColumns(merged) })], { type: "text/csv;charset=utf-8" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = outName() + ".csv"; link.click();
@@ -201,10 +238,12 @@ export default function Home() {
     const r = rows[i], a = results[i];
     if (search) {
       const s = search.toLowerCase();
-      if (!(r[cols.scenario] ?? "").toLowerCase().includes(s) && !(a?.rfCode ?? "").toLowerCase().includes(s)) return false;
+      const rf = isAssessed(a) ? a.rfCode ?? "" : "";
+      if (!(r[cols.scenario] ?? "").toLowerCase().includes(s) && !rf.toLowerCase().includes(s)) return false;
     }
-    if (filter === "review") return !!a && a.status.includes("ต้องตรวจ");
-    if (filter === "high") return !!a && (a.zone === "สูง" || a.zone === "สูงมาก");
+    if (filter === "review") return isAssessed(a) && a.needsReview;
+    if (filter === "high") return isAssessed(a) && (a.zone === "สูง" || a.zone === "สูงมาก");
+    if (filter === "incomplete") return isIncomplete(a);
     return true;
   });
 
@@ -312,8 +351,42 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-5 md:grid-cols-4">
                   <Stat label="ประเมินแล้ว" value={`${stats.total}/${rows.length}`} tone="text-white" onClick={() => setFilter("all")} active={filter === "all"} />
                   <Stat label="ต้องตรวจสอบ" value={stats.review} tone="text-amber-400" onClick={() => setFilter("review")} active={filter === "review"} />
-                  <Stat label="ความเสี่ยงสูง" value={stats.high} tone="text-red-400" onClick={() => setFilter("high")} active={filter === "high"} />
-                  <Stat label="มั่นใจสูง" value={`${stats.total ? Math.round((stats.confident / stats.total) * 100) : 0}%`} tone="text-emerald-400" />
+                  {stats.incomplete > 0
+                    ? <Stat label="ข้อมูลไม่ครบ" value={stats.incomplete} tone="text-slate-400" onClick={() => setFilter("incomplete")} active={filter === "incomplete"} />
+                    : <Stat label="ความเสี่ยงสูง" value={stats.high} tone="text-red-400" onClick={() => setFilter("high")} active={filter === "high"} />}
+                  <Stat label="คะแนนความมั่นใจเฉลี่ย" value={stats.avgScore.toFixed(1)} tone="text-emerald-400" />
+                </div>
+
+                {stats.incomplete > 0 && (
+                  <div className="mt-5 rounded-2xl border border-amber-500/25 bg-amber-500/5 px-6 py-4 text-[15px] leading-relaxed text-amber-200/90">
+                    มี {stats.incomplete} รายการที่กรอกไม่ครบทั้งสามช่อง ระบบจึงไม่ประเมินให้
+                    เพราะคะแนนความมั่นใจคิดจากความครบของข้อมูลด้วย หากประเมินทั้งที่ข้อมูลขาด คะแนนจะสูงเกินความเป็นจริง
+                    <button onClick={() => setFilter("incomplete")} className="ml-2 font-medium text-amber-300 underline underline-offset-4 transition hover:text-amber-200">ดูรายการ</button>
+                  </div>
+                )}
+
+                {/* กระจายตัวของคะแนน แยกตามระดับที่ตั้งไว้ในหน้าตั้งค่า */}
+                <div className={`mt-5 ${CARD} p-8`}>
+                  <Glow />
+                  <div className="relative">
+                    <div className="mb-5 flex flex-wrap items-baseline justify-between gap-3">
+                      <div className="text-lg font-bold text-white">การกระจายของความมั่นใจ</div>
+                      <Link href="/settings/confidence" className="text-sm font-medium text-indigo-300 transition hover:text-indigo-200">ปรับเกณฑ์คะแนน</Link>
+                    </div>
+                    <div className="flex h-3 w-full overflow-hidden rounded-full bg-white/10">
+                      {stats.bands.map(([label, b]) => (
+                        <div key={label} className={BAND_BAR[b.color] ?? "bg-white/40"} style={{ width: `${(b.n / stats.total) * 100}%` }} title={`${label} ${b.n} รายการ`} />
+                      ))}
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2 text-[15px] text-slate-300">
+                      {stats.bands.map(([label, b]) => (
+                        <span key={label} className="inline-flex items-center gap-2">
+                          <span className={`h-2 w-2 rounded-full ${BAND_DOT[b.color] ?? "bg-white/30"}`} />
+                          {label} <span className="tabular-nums text-slate-400">{b.n}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className={`mt-5 ${CARD} p-8 md:p-10`}>
@@ -343,7 +416,7 @@ export default function Home() {
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="ค้นหาสถานการณ์หรือ RF"
                   className="rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 text-[15px] text-white outline-none focus:border-[var(--brand)]" />
-                {([["all", "ทั้งหมด"], ["review", "ต้องตรวจสอบ"], ["high", "ความเสี่ยงสูง"]] as const).map(([k, l]) => (
+                {([["all", "ทั้งหมด"], ["review", "ต้องตรวจสอบ"], ["high", "ความเสี่ยงสูง"], ["incomplete", "ข้อมูลไม่ครบ"]] as const).map(([k, l]) => (
                   <button key={k} onClick={() => setFilter(k)}
                     className={`rounded-full border px-5 py-2.5 text-[15px] transition ${filter === k ? "border-[var(--brand)] bg-white/10 text-white" : "border-white/15 text-slate-300 hover:bg-white/5"}`}>{l}</button>
                 ))}
@@ -360,7 +433,8 @@ export default function Home() {
                         <th className="px-8 py-5 text-center">โอกาสเกิด</th>
                         <th className="px-8 py-5 text-center">ผลกระทบ</th>
                         <th className="px-8 py-5">โซน</th>
-                        <th className="px-8 py-5">ความมั่นใจ</th>
+                        <th className="px-8 py-5 text-right">คะแนนมั่นใจ</th>
+                        <th className="px-8 py-5">ระดับ</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5 text-[15px]">
@@ -368,28 +442,68 @@ export default function Home() {
                         const r = rows[i];
                         const a = results[i];
                         const open = expanded === i;
+                        const done = isAssessed(a);
                         return (
                           <Fragment key={i}>
-                            <tr onClick={() => a && setExpanded(open ? null : i)} className={`${a ? "cursor-pointer hover:bg-white/5" : ""} align-top transition`}>
+                            <tr onClick={() => done && setExpanded(open ? null : i)} className={`${done ? "cursor-pointer hover:bg-white/5" : ""} align-top transition`}>
                               <td className="px-8 py-5 text-slate-500 tabular-nums">{String(i + 1).padStart(2, "0")}</td>
                               <td className="max-w-sm px-8 py-5 text-slate-300">{(r[cols.scenario] ?? "").slice(0, 64) || "—"}</td>
-                              <td className="px-8 py-5"><span className="font-mono text-[15px] font-medium text-white">{a?.rfCode ?? (busy ? "…" : "—")}</span></td>
-                              <td className="px-8 py-5 text-center tabular-nums text-slate-200">{a?.likelihood ?? ""}</td>
-                              <td className="px-8 py-5 text-center tabular-nums text-slate-200">{a?.impactScore ?? ""}</td>
-                              <td className="px-8 py-5">{a && <Tag dot={ZONE_DOT[a.zone] ?? "bg-white/30"} text={a.zone} />}</td>
-                              <td className="px-8 py-5">{a && <Tag dot={CONF_DOT[a.confidence] ?? "bg-white/30"} text={a.confidence} />}</td>
+                              {isIncomplete(a) ? (
+                                // ไม่ได้ประเมิน — บอกตรง ๆ ว่าขาดช่องไหน แทนที่จะโชว์คะแนนที่เชื่อไม่ได้
+                                <td colSpan={5} className="px-8 py-5 text-[15px] text-amber-300/90">
+                                  ไม่ได้ประเมิน — ขาด{a.missing.join(" ")}
+                                </td>
+                              ) : (
+                                <>
+                                  <td className="px-8 py-5"><span className="font-mono text-[15px] font-medium text-white">{done ? a.rfCode ?? "—" : busy ? "…" : "—"}</span></td>
+                                  <td className="px-8 py-5 text-center tabular-nums text-slate-200">{done ? a.likelihood : ""}</td>
+                                  <td className="px-8 py-5 text-center tabular-nums text-slate-200">{done ? a.impactScore : ""}</td>
+                                  <td className="px-8 py-5">{done && <Tag dot={ZONE_DOT[a.zone] ?? "bg-white/30"} text={a.zone} />}</td>
+                                  <td className={`px-8 py-5 text-right text-lg font-semibold tabular-nums ${done ? BAND_TEXT[a.confidenceColor] ?? "text-white" : ""}`}>
+                                    {done ? a.confidenceScore.toFixed(1) : ""}
+                                  </td>
+                                </>
+                              )}
+                              <td className="px-8 py-5">{done && <Tag dot={BAND_DOT[a.confidenceColor] ?? "bg-white/30"} text={a.confidence} />}</td>
                             </tr>
-                            {open && a && (
+                            {open && done && (
                               <tr className="bg-white/[0.03]">
                                 <td></td>
-                                <td colSpan={6} className="px-8 pb-8 pt-2">
+                                <td colSpan={7} className="px-8 pb-8 pt-2">
                                   <div className="grid gap-x-12 gap-y-6 md:grid-cols-2">
                                     <Field label="หมวดความเสี่ยง" value={`${a.level1}, ${a.level2}, ${a.rfCode} ${a.level3Name ?? ""}`} />
                                     <Field label="เหตุผลการจัดหมวด" value={a.classificationReason} />
                                     <Field label={`โอกาสเกิด ระดับ ${a.likelihood}`} value={a.likelihoodReason} />
                                     <Field label={`ผลกระทบ ระดับ ${a.impactScore} ด้าน ${a.impactDimension}`} value={a.impactReason} />
                                     <Field label={`แนวทางจัดการ (${a.managementColor})`} value={a.managementAction} />
-                                    <Field label="สัญญาณความมั่นใจ" value={`ความใกล้เคียง ${a.topSimilarity} ระยะห่าง ${a.margin}`} />
+                                    <Field label="สิ่งที่ควรทำต่อ" value={`${a.confidence} — ${a.confidenceAction}`} />
+                                  </div>
+
+                                  {/* ที่มาของคะแนนความมั่นใจ ทีละองค์ประกอบ */}
+                                  <div className="mt-7 rounded-2xl border border-white/10 bg-black/20 p-6">
+                                    <div className="mb-5 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                                      <span className="text-[15px] font-bold text-white">ที่มาของคะแนน {a.confidenceScore.toFixed(1)}</span>
+                                      <span className="text-sm text-slate-500">
+                                        ความใกล้เคียง {a.topSimilarity} · ระยะห่าง {a.margin}
+                                        {a.tieCount > 0 ? ` · มีตัวเลือกสูสี ${a.tieCount} รายการ` : ""}
+                                      </span>
+                                    </div>
+                                    <div className="space-y-4">
+                                      {a.confidenceComponents.map((c) => (
+                                        <div key={c.key}>
+                                          <div className="mb-1.5 flex items-baseline justify-between gap-3 text-[15px]">
+                                            <span className="font-semibold text-white">{c.label}</span>
+                                            <span className="tabular-nums text-slate-300">
+                                              {c.score.toFixed(1)} × {c.weight.toFixed(0)}% = <span className="font-semibold text-white">{c.points.toFixed(1)}</span>
+                                            </span>
+                                          </div>
+                                          <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
+                                            <div className={`h-full rounded-full ${BAND_BAR[a.confidenceColor] ?? "bg-white/40"}`} style={{ width: `${c.score}%` }} />
+                                          </div>
+                                          <div className="mt-1.5 text-sm leading-relaxed text-slate-500">{c.detail}</div>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
                                 </td>
                               </tr>

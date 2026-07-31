@@ -124,6 +124,19 @@ export default function Settings() {
           </div>
         </div>
 
+        {/* เกณฑ์คะแนนความมั่นใจ — แยกไปอีกหน้าเพราะมีทั้งน้ำหนัก ช่วงคะแนน และหน้าจำลองผล */}
+        <div className="mt-14 border-t border-white/10 pt-10">
+          <div className="mb-2 text-lg font-bold text-white">เกณฑ์คะแนนความมั่นใจ</div>
+          <div className="mb-5 max-w-2xl text-sm leading-relaxed text-slate-400">
+            ตั้งน้ำหนักของสามองค์ประกอบที่ใช้คิดคะแนน และกำหนดเองว่าคะแนนช่วงไหนคือความแม่นยำระดับใด
+            พร้อมทดลองคำนวณดูผลก่อนบันทึก
+          </div>
+          <Link href="/settings/confidence"
+            className="inline-flex rounded-full border border-white/25 px-6 py-3 text-[15px] text-slate-200 transition hover:bg-white/10">
+            ตั้งค่าเกณฑ์คะแนน
+          </Link>
+        </div>
+
         {msg && <div className="mt-8 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-[15px] text-emerald-300">{msg}</div>}
       </main>
     </div>

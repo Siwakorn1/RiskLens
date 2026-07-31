@@ -3,6 +3,8 @@ import { retrieve, type Retrieved } from "./retrieve";
 import {
   zoneFor, managementFor, likelihoodRubricText, impactRubricText,
 } from "./rubrics";
+import { computeConfidence, type BandColor, type ComponentScore } from "./confidence";
+import { getConfidenceConfig } from "./confidence-store";
 
 export interface AssessInput {
   scenario: string;
@@ -24,11 +26,18 @@ export interface Assessment {
   zone: string;
   managementColor: string;
   managementAction: string;
-  confidence: string;      // ระดับ: แน่นอน/ค่อนข้างแน่ใจ/ไม่แน่ใจ/คลุมเครือ
-  confidenceScore: number; // เลขดิบ 0-100 ไว้เรียงลำดับ (ไม่โชว์ผู้ใช้)
-  status: string;          // ✅ ปกติ / ⚠️ ต้องตรวจ
+  confidenceScore: number;             // คะแนนรวม 0-100 (ตัวหลักที่โชว์ผู้ใช้)
+  confidence: string;                  // ชื่อระดับตามช่วงคะแนนที่ผู้ใช้ตั้งไว้
+  confidenceColor: BandColor;
+  confidenceAction: string;            // สิ่งที่ควรทำเมื่อได้ระดับนี้
+  confidenceComponents: ComponentScore[]; // คะแนนย่อยรายองค์ประกอบ + สูตรที่ใช้
+  sufficiencyScore: number | null;     // AI ให้ความครบถ้วนของ input กี่คะแนน
+  sufficiencyReason: string;
+  needsReview: boolean;
+  status: string;                      // ✅ ปกติ / ⚠️ ต้องตรวจ
   topSimilarity: number;
   margin: number;
+  tieCount: number;
 }
 
 const SYSTEM = `คุณคือผู้ช่วยประเมินความเสี่ยงองค์กรของ NITMX ทำงานตามกรอบ ISO 31000
@@ -36,7 +45,9 @@ const SYSTEM = `คุณคือผู้ช่วยประเมินค�
 1) เลือกความเสี่ยงย่อย (RF code) ที่ตรงที่สุด "จากรายการผู้สมัครที่ให้เท่านั้น" — ถ้าไม่มีตัวไหนตรงเลย ให้ rf_code = null
 2) ให้คะแนน Likelihood 1-5 ตามเกณฑ์ที่ให้
 3) ให้คะแนน Impact 1-5 ตามเกณฑ์ที่ให้ (พิจารณาทั้ง 5 ด้าน แล้วเอาด้านที่รุนแรงสุดเป็นตัวตัดสิน ระบุด้วยว่าด้านไหน)
-บอกด้วยว่า input มีรายละเอียดพอจะประเมินได้ชัดเจนไหม (input_sufficient)
+บอกด้วยว่า input มีรายละเอียดพอจะประเมินได้ชัดเจนแค่ไหน เป็นคะแนน 0-100 (input_sufficiency)
+  0-30 = แทบไม่มีข้อมูล เดาล้วน · 31-60 = พอเดาได้แต่ขาดรายละเอียดสำคัญ
+  61-85 = ข้อมูลพอประเมินได้ · 86-100 = ข้อมูลครบทั้งสถานการณ์ สาเหตุ และผลกระทบ
 ตอบเป็นภาษาไทย และตอบเป็น JSON เท่านั้นตาม schema ที่กำหนด ห้ามมีข้อความอื่นนอก JSON`;
 
 function buildUserPrompt(input: AssessInput, candidates: Retrieved[]): string {
@@ -66,7 +77,8 @@ ${impactRubricText()}
   "impact": 1,
   "impact_dimension": "financial | reputation | operational | compliance | strategic",
   "impact_reason": "อ้างอิงเกณฑ์",
-  "input_sufficient": true
+  "input_sufficiency": 75,
+  "input_sufficiency_reason": "บอกสั้น ๆ ว่าข้อมูลส่วนไหนขาด หรือครบดีแล้ว"
 }`;
 }
 
@@ -75,28 +87,20 @@ function safeParse(raw: string): Record<string, unknown> {
   return JSON.parse(cleaned);
 }
 
-function confidenceBand(top: number, margin: number, sufficient: boolean): string {
-  const order = ["คลุมเครือ", "ไม่แน่ใจ", "ค่อนข้างแน่ใจ", "แน่นอน"];
-  let band: string;
-  if (top >= 0.78 && margin >= 0.05) band = "แน่นอน";
-  else if (top >= 0.72 && margin >= 0.02) band = "ค่อนข้างแน่ใจ";
-  else if (top < 0.65) band = "คลุมเครือ";
-  else band = "ไม่แน่ใจ";
-  if (!sufficient) band = order[Math.max(0, order.indexOf(band) - 1)]; // ข้อมูลไม่พอ ลด 1 ขั้น
-  return band;
-}
-
-function rawScore(top: number, margin: number): number {
-  const base = Math.max(0, Math.min(1, (top - 0.55) / 0.28)); // 0.55→0, 0.83→1
-  const marginBoost = Math.min(1, margin / 0.08);
-  return Math.round((0.7 * base + 0.3 * marginBoost) * 100);
+/**
+ * แปลงคำตอบเรื่องความเพียงพอของ input ให้เป็นคะแนน 0-100
+ * รองรับทั้งฟิลด์ใหม่ (ตัวเลข) และฟิลด์เดิม (boolean) เผื่อโมเดลตอบตามรูปแบบเก่า
+ */
+function sufficiencyOf(p: Record<string, unknown>): number | null {
+  const n = Number(p.input_sufficiency);
+  if (Number.isFinite(n)) return Math.max(0, Math.min(100, n));
+  if (typeof p.input_sufficient === "boolean") return p.input_sufficient ? 90 : 40;
+  return null; // โมเดลไม่ตอบ — ปล่อยให้ตัวคำนวณใช้เฉพาะสัญญาณที่วัดเองได้
 }
 
 export async function assess(input: AssessInput): Promise<Assessment> {
   const query = `${input.scenario} ${input.rootCause} ${input.impact}`.trim();
   const candidates = await retrieve(query, 5);
-  const top = candidates[0]?.score ?? 0;
-  const margin = (candidates[0]?.score ?? 0) - (candidates[1]?.score ?? 0);
 
   const raw = await llm.generateJSON(SYSTEM, buildUserPrompt(input, candidates));
   const p = safeParse(raw);
@@ -109,9 +113,16 @@ export async function assess(input: AssessInput): Promise<Assessment> {
   const zone = zoneFor(likelihood, impactScore);
   const mgmt = managementFor(zone);
 
-  const sufficient = p.input_sufficient !== false;
-  const confidence = confidenceBand(top, margin, sufficient);
-  const status = ["แน่นอน", "ค่อนข้างแน่ใจ"].includes(confidence) ? "✅ ปกติ" : "⚠️ ต้องตรวจ";
+  // คะแนนความมั่นใจ: คำนวณจากสัญญาณที่วัดได้จริง ตามเกณฑ์/น้ำหนักที่ผู้ใช้ตั้งไว้
+  const sufficiency = sufficiencyOf(p);
+  const conf = computeConfidence(
+    {
+      neighbors: candidates.map((c) => c.score),
+      fields: input,
+      llmSufficiency: sufficiency,
+    },
+    getConfidenceConfig()
+  );
 
   return {
     rfCode,
@@ -127,10 +138,17 @@ export async function assess(input: AssessInput): Promise<Assessment> {
     zone,
     managementColor: mgmt.color,
     managementAction: mgmt.action,
-    confidence,
-    confidenceScore: rawScore(top, margin),
-    status,
-    topSimilarity: Number(top.toFixed(3)),
-    margin: Number(margin.toFixed(3)),
+    confidenceScore: conf.score,
+    confidence: conf.band.label,
+    confidenceColor: conf.band.color,
+    confidenceAction: conf.band.action,
+    confidenceComponents: conf.components,
+    sufficiencyScore: sufficiency,
+    sufficiencyReason: String(p.input_sufficiency_reason ?? ""),
+    needsReview: conf.needsReview,
+    status: conf.needsReview ? "⚠️ ต้องตรวจ" : "✅ ปกติ",
+    topSimilarity: conf.topSimilarity,
+    margin: conf.margin,
+    tieCount: conf.tieCount,
   };
 }

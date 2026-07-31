@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "ingest": "tsx --env-file=.env.local scripts/ingest.ts",
-    "eval": "tsx --env-file=.env.local scripts/eval.ts"
+    "eval": "tsx --env-file=.env.local scripts/eval.ts",
+    "calibrate": "tsx --env-file=.env.local scripts/calibrate.ts"
   },
   "dependencies": {
     "@google/genai": "^2.13.0",

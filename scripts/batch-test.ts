@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import Papa from "papaparse";
-import { assessRows, type Row } from "../src/lib/csv/batch";
+import { assessRows, unionColumns, type Row } from "../src/lib/csv/batch";
 
 const IN = path.join(process.cwd(), "..", "source", "complete test file.csv");
 const OUT = path.join(process.cwd(), "..", "source", "complete test file.OUTPUT.csv");
@@ -25,7 +25,7 @@ async function main() {
   });
 
   // เขียน output (ใส่ BOM ให้ Excel อ่านไทยไม่เพี้ยน)
-  fs.writeFileSync(OUT, "﻿" + Papa.unparse(result));
+  fs.writeFileSync(OUT, "﻿" + Papa.unparse(result, { columns: unionColumns(result) }));
   console.log(`\n✅ เขียนผลลง ${path.basename(OUT)}`);
 
   // ===== EVAL =====
@@ -43,16 +43,24 @@ async function main() {
     byBand[band].n++;
     if (okL1) byBand[band].l1++;
     if (okRf) byBand[band].rf++;
-    if (["แน่นอน", "ค่อนข้างแน่ใจ"].includes(band)) { confTotal++; if (okL1) l1hitConf++; }
+    // "ผ่านเกณฑ์" = ไม่ติดธงต้องตรวจ (เกณฑ์คะแนนตั้งได้เองในหน้าตั้งค่า จึงไม่อิงชื่อระดับ)
+    if (!(r["Status"] ?? "").includes("ต้องตรวจ")) { confTotal++; if (okL1) l1hitConf++; }
   });
 
   const n = result.length;
   console.log(`\n═══ ความแม่น (เทียบเฉลย 30 แถว) ═══`);
   console.log(`หมวดใหญ่ (Level 1) ตรง : ${l1hit}/${n} = ${(100*l1hit/n).toFixed(0)}%`);
   console.log(`RF เจาะจง (Level 3) ตรง : ${rfhit}/${n} = ${(100*rfhit/n).toFixed(0)}%`);
-  console.log(`\nแยกตามระดับ confidence:`);
+  console.log(`\nแยกตามระดับความมั่นใจ:`);
   for (const [band, s] of Object.entries(byBand)) {
     console.log(`  ${band}: ${s.n} แถว | L1 ตรง ${s.l1}/${s.n} | RF ตรง ${s.rf}/${s.n}`);
+  }
+  if (confTotal) {
+    console.log(`\nเฉพาะแถวที่ผ่านเกณฑ์คะแนน (ไม่ติดธงต้องตรวจ): ${confTotal}/${n} แถว | L1 ตรง ${l1hitConf}/${confTotal} = ${(100*l1hitConf/confTotal).toFixed(0)}%`);
+  }
+  const scores = result.map((r) => Number(r["Confidence Score"] ?? 0)).filter((s) => s > 0);
+  if (scores.length) {
+    console.log(`คะแนนความมั่นใจเฉลี่ย: ${(scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)} (ต่ำสุด ${Math.min(...scores).toFixed(1)} · สูงสุด ${Math.max(...scores).toFixed(1)})`);
   }
 }
 main();

@@ -1,12 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
 import type { LLMProvider } from "./provider";
+import { keyFor } from "./settings";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const EMBED_MODEL = process.env.GEMINI_EMBED_MODEL ?? "text-embedding-004";
 const CHAT_MODEL = process.env.GEMINI_CHAT_MODEL ?? "gemini-2.5-flash";
 
+function getGenAI() {
+  const apiKey = keyFor("gemini");
+  return new GoogleGenAI({ apiKey });
+}
+
 export const geminiProvider: LLMProvider = {
   async embed(texts) {
+    const ai = getGenAI();
     const res = await ai.models.embedContent({
       model: EMBED_MODEL,
       contents: texts,
@@ -16,6 +22,7 @@ export const geminiProvider: LLMProvider = {
   },
 
   async *chatStream(systemPrompt, userPrompt) {
+    const ai = getGenAI();
     const stream = await ai.models.generateContentStream({
       model: CHAT_MODEL,
       contents: userPrompt,
@@ -27,6 +34,7 @@ export const geminiProvider: LLMProvider = {
   },
 
   async generateJSON(systemPrompt, userPrompt) {
+    const ai = getGenAI();
     const res = await ai.models.generateContent({
       model: CHAT_MODEL,
       contents: userPrompt,
@@ -38,3 +46,4 @@ export const geminiProvider: LLMProvider = {
     return res.text ?? "";
   },
 };
+

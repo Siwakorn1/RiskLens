@@ -26,7 +26,10 @@ async function main() {
     console.log(`Impact    : ${r.impactScore} [ด้าน ${r.impactDimension}]  (${r.impactReason})`);
     console.log(`โซนความเสี่ยง: ${r.zone}  ${r.managementColor}`);
     console.log(`แนวทางจัดการ : ${r.managementAction.slice(0, 60)}...`);
-    console.log(`Confidence: ${r.confidence}  ${r.status}   (score=${r.confidenceScore}, top=${r.topSimilarity}, margin=${r.margin})`);
+    console.log(`ความมั่นใจ: ${r.confidenceScore.toFixed(1)} คะแนน [${r.confidence}]  ${r.status}`);
+    for (const c of r.confidenceComponents) {
+      console.log(`          ${c.label}: ${c.score.toFixed(1)} × ${c.weight.toFixed(0)}% = ${c.points.toFixed(1)}  — ${c.detail}`);
+    }
   }
 }
 main();

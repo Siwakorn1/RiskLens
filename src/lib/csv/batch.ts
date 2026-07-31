@@ -1,6 +1,9 @@
 import { assess, type Assessment } from "../rag/assess";
+import { missingFields, isBlankInput } from "../rag/confidence";
+import type { Row } from "./columns";
 
-export type Row = Record<string, string>;
+export type { Row };
+export { unionColumns } from "./columns";
 
 /** ชื่อคอลัมน์ที่ใช้เป็น input (ปรับได้ตามไฟล์ที่อัปมา) */
 export interface ColumnMap {
@@ -41,6 +44,7 @@ export async function assessWithRetry(input: Parameters<typeof assess>[0]): Prom
 
 /** เติมคอลัมน์ผลประเมินลงในแถวเดิม (คงคอลัมน์อื่นไว้ครบ) */
 function fill(row: Row, r: Assessment): Row {
+  const part = (k: string) => r.confidenceComponents.find((c) => c.key === k);
   return {
     ...row,
     "Risk Level 1": r.level1 ?? "",
@@ -51,13 +55,22 @@ function fill(row: Row, r: Assessment): Row {
     "Impact Score": String(r.impactScore),
     "Risk Zone": r.zone,
     Management: r.managementAction,
+    "Confidence Score": r.confidenceScore.toFixed(1),
     Confidence: r.confidence,
     Status: r.status,
-    _confidence_score: String(r.confidenceScore),
+    // คะแนนย่อยรายองค์ประกอบ — ไว้ตรวจย้อนหลังว่าคะแนนรวมมาจากไหน
+    "Conf Similarity": (part("similarity")?.score ?? 0).toFixed(1),
+    "Conf Margin": (part("margin")?.score ?? 0).toFixed(1),
+    "Conf Completeness": (part("completeness")?.score ?? 0).toFixed(1),
+    "Top Similarity": String(r.topSimilarity),
+    Margin: String(r.margin),
   };
 }
 
-/** ประเมินทุกแถวใน CSV — ข้ามแถวที่ input ว่าง, รายงานความคืบหน้าได้ */
+/**
+ * ประเมินทุกแถวใน CSV — รายงานความคืบหน้าได้
+ * แถวว่างสนิทข้ามเงียบ ๆ ส่วนแถวที่กรอกไม่ครบสามช่องจะไม่ประเมิน แต่ติดสถานะบอกว่าขาดช่องไหน
+ */
 export async function assessRows(
   rows: Row[],
   cols: ColumnMap = DEFAULT_COLUMNS,
@@ -71,8 +84,11 @@ export async function assessRows(
       rootCause: (row[cols.rootCause] ?? "").trim(),
       impact: (row[cols.impact] ?? "").trim(),
     };
-    if (!input.scenario && !input.rootCause && !input.impact) {
+    const missing = missingFields(input);
+    if (isBlankInput(input)) {
       out.push(row); // แถวว่าง ข้ามไป
+    } else if (missing.length) {
+      out.push({ ...row, Status: `⏭️ ไม่ได้ประเมิน — ขาด${missing.join(" ")}` });
     } else {
       out.push(fill(row, await assessWithRetry(input)));
       await sleep(400); // เว้นจังหวะเล็กน้อยกัน rate limit

@@ -1,0 +1,48 @@
+{
+  "weights": {
+    "similarity": 50,
+    "margin": 20,
+    "completeness": 30
+  },
+  "similarity": {
+    "floor": 0.7,
+    "ceil": 0.82
+  },
+  "margin": {
+    "full": 0.05,
+    "tieBand": 0.02,
+    "tiePenalty": 8
+  },
+  "completeness": {
+    "fieldWeight": 50,
+    "llmWeight": 50,
+    "minChars": 25
+  },
+  "bands": [
+    {
+      "label": "แน่นอน",
+      "min": 80,
+      "color": "emerald",
+      "action": "ใช้ได้ทันที"
+    },
+    {
+      "label": "ค่อนข้างแน่ใจ",
+      "min": 65,
+      "color": "sky",
+      "action": "ใช้ได้ ควรสุ่มตรวจ"
+    },
+    {
+      "label": "ไม่แน่ใจ",
+      "min": 45,
+      "color": "amber",
+      "action": "ควรให้เจ้าหน้าที่ตรวจสอบ"
+    },
+    {
+      "label": "คลุมเครือ",
+      "min": 0,
+      "color": "rose",
+      "action": "ต้องให้เจ้าหน้าที่ตัดสิน"
+    }
+  ],
+  "reviewBelow": 65
+}
